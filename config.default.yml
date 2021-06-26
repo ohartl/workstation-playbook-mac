@@ -1,0 +1,25 @@
+---
+dotfiles_repo: "https://github.com/ohartl/dotfiles.git"
+dotfiles_repo_version: main
+dotfiles_repo_local_destination: "~/.local/dotfiles"
+dotfiles_files:
+  - .vars
+  - .aliases
+
+  - .inputrc
+  - .zshrc
+  - .bash_profile
+  - .bashrc
+
+  - .hyper.js
+  - .curlrc
+
+  - .vimrc
+  - .nanorc
+  - .editorconfig
+
+  - .gitconfig
+  - .gitignore_global
+
+  - .local/bin/extract
+  - .local/bin/git-remove-merged-branches

@@ -1,0 +1,39 @@
+#!/usr/bin/env ansible-playbook
+---
+- hosts: all
+
+  vars_files:
+    - config.default.yml
+
+  pre_tasks:
+    - name: Include playbook configuration.
+      include_vars: "{{ item }}"
+      with_fileglob:
+        - "{{ playbook_dir }}/config.yml"
+      tags: ["always"]
+
+    - name: Create local bin.
+      ansible.builtin.file:
+        path: ~/.local/bin
+        state: directory
+        mode: "0755"
+    #- name: Install Oh my zsh.
+    #  shell: |
+    #    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
+    - name: Install Autojump.
+      ansible.builtin.package:
+        name: autojump
+        state: present
+
+  roles:
+    - role: geerlingguy.dotfiles
+      tags: ["dotfiles"]
+    - role: git
+      tags: ["git"]
+    - role: fonts
+      tags: ["fonts"]
+
+  post_tasks:
+    - name: Set default shell.
+      become: true
+      shell: chsh -s $(which zsh) ohartl

@@ -1,0 +1,23 @@
+# Local customizations, included by `~/.gitconfig`
+
+{% if git_diff_highlight_path is defined %}
+[pager]
+  log = {{ git_diff_highlight_path }} | less
+  show = {{ git_diff_highlight_path }} | less
+  diff = {{ git_diff_highlight_path }} | less
+
+[interactive]
+  diffFilter = {{ git_diff_highlight_path }}
+{% endif %}
+
+{% if git_gpg_path is defined %}
+[gpg]
+  program = {{ git_gpg_path }}
+{% endif %}
+
+#[user]
+#  signingkey = EAB11EC9
+#[commit]
+#  gpgsign = true
+#[tag]
+#  forceSignAnnotated = true

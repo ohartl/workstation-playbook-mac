@@ -1,0 +1,16 @@
+---
+- name: Install fonts on MacOSX.
+  when: ansible_distribution == "MacOSX"
+  block:
+    - name: Homebrew tap into fonts.
+      community.general.homebrew_tap:
+        name: homebrew/cask-fonts
+        state: present
+
+    - name: Install Fira fonts.
+      community.general.homebrew_cask:
+        name:
+          # - font-fira-code
+          - font-fira-code-nerd-font
+          - font-fira-mono-nerd-font
+        state: present

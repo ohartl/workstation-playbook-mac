@@ -1,0 +1,42 @@
+---
+- name: Install `git`.
+  ansible.builtin.package:
+    name: git
+    state: present
+
+- name: Find local `diff-highlight` for `git diff`.
+  when: ansible_distribution == "MacOSX"
+  block:
+    - name: Get `git` path.
+      changed_when: false
+      ansible.builtin.shell: "realpath `which git`"
+      register: git_git_path_return
+    - name: Stat `diff-highlight`.
+      ansible.builtin.stat:
+        path: "{{ git_git_path_return.stdout | replace('/bin/git', '/share/git-core/contrib/diff-highlight/diff-highlight') }}"
+      register: git_diff_highlight_stat
+    - name: Set `diff-highlight` fact.
+      ansible.builtin.set_fact:
+        git_diff_highlight_path: "{{ git_diff_highlight_stat.stat.path }}"
+      when: git_diff_highlight_stat.stat.exists
+
+- name: Find local `gpg` for `git` gpg signing.
+  when: ansible_distribution == "MacOSX"
+  block:
+    - name: Get `gpg` path.
+      changed_when: false
+      # Check gpg2 as i use MacGPG2 on MacOSX
+      ansible.builtin.shell: "realpath `which gpg2`"
+      register: git_gpg_path_return
+    - name: Set `gpg` path.
+      changed_when: false
+      ansible.builtin.set_fact:
+        git_gpg_path: "{{ git_gpg_path_return.stdout }}"
+
+- name: Create ~/.gitconfig.local.
+  ansible.builtin.template:
+    src: ./gitconfig.local.j2
+    dest: ~/.local/.gitconfig.local
+    owner: ohartl
+    group: staff
+    mode: "0644"
